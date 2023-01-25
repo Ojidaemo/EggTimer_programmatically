@@ -77,7 +77,7 @@ class ViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.alignment = .fill
         stackView.distribution = .fillEqually
-        stackView.spacing = 10
+        stackView.spacing = 30
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -118,6 +118,7 @@ class ViewController: UIViewController {
             eggStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             eggStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
             eggStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            eggStack.heightAnchor.constraint(equalToConstant: 150),
             
             eggsProgressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             eggsProgressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
