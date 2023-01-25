@@ -6,10 +6,18 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
-   lazy var eggs = [softEgg, mediumEgg, hardEgg]
+    lazy var eggs = [softEgg, mediumEgg, hardEgg]
+    let eggTimes = ["Soft": 300, "Medium":420, "Hard": 720]
+    
+    var player: AVAudioPlayer!
+    
+    var timer = Timer()
+    var totalTime = 0
+    var secondsPassed = 0
     
     lazy var questionLabel: UILabel = {
         
@@ -32,6 +40,7 @@ class ViewController: UIViewController {
         soft.titleLabel?.textAlignment = .center
         soft.imageView?.contentMode = .scaleAspectFit
         soft.translatesAutoresizingMaskIntoConstraints = false
+        soft.addTarget(self, action: #selector(eggPressed), for: .touchUpInside)
         return soft
     }()
     
@@ -44,6 +53,7 @@ class ViewController: UIViewController {
         medium.titleLabel?.textAlignment = .center
         medium.imageView?.contentMode = .scaleAspectFit
         medium.translatesAutoresizingMaskIntoConstraints = false
+        medium.addTarget(self, action: #selector(eggPressed), for: .touchUpInside)
         return medium
     }()
     
@@ -56,9 +66,10 @@ class ViewController: UIViewController {
         hard.titleLabel?.textAlignment = .center
         hard.imageView?.contentMode = .scaleAspectFit
         hard.translatesAutoresizingMaskIntoConstraints = false
+        hard.addTarget(self, action: #selector(eggPressed), for: .touchUpInside)
         return hard
     }()
-        
+    
     lazy var eggsProgressBar: UIProgressView = {
         
         let progress = UIProgressView(progressViewStyle: .bar)
@@ -81,7 +92,7 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,29 +101,65 @@ class ViewController: UIViewController {
         view.addSubview(questionLabel)
         view.addSubview(eggStack)
         view.addSubview(eggsProgressBar)
-                
+        
         setConstraints()
         
     }
-
-    func setConstraints() {
+    
+    @objc func eggPressed(sender: UIButton) {
         
-        NSLayoutConstraint.activate([
-            
-            questionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            eggStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            eggStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            eggStack.heightAnchor.constraint(equalToConstant: 140),
-            eggStack.widthAnchor.constraint(equalToConstant: 350),
-            
-            eggsProgressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            eggsProgressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            eggsProgressBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+        timer.invalidate()
         
-        ])
+        let hardness = sender.currentTitle!
+        
+        totalTime = eggTimes[hardness]!
+        
+        eggsProgressBar.progress = 0.0
+        
+        questionLabel.text = hardness
+        
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target:self, selector: #selector(updateTimer), userInfo:nil, repeats: true)
+        
     }
-
-}
+    
+    @objc func updateTimer() {
+                
+        if secondsPassed < totalTime {
+            
+            secondsPassed += 1
+            eggsProgressBar.progress = Float(secondsPassed) / Float(totalTime)
+            
+        } else {
+            
+            timer.invalidate()
+            questionLabel.text = "DONE!"
+            
+            let url = Bundle.main.url(forResource: "alarm_sound", withExtension: "mp3")
+            player = try! AVAudioPlayer(contentsOf: url!)
+            player.play()
+            
+        }
+            
+        }
+        
+        func setConstraints() {
+            
+            NSLayoutConstraint.activate([
+                
+                questionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+                questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                
+                eggStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+                eggStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                eggStack.heightAnchor.constraint(equalToConstant: 140),
+                eggStack.widthAnchor.constraint(equalToConstant: 350),
+                
+                eggsProgressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+                eggsProgressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
+                eggsProgressBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+                
+            ])
+        }
+        
+    }
 
