@@ -81,17 +81,6 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
-//    lazy var globalStack: UIStackView = {
-//
-//        let global = UIStackView(arrangedSubviews: [questionLabel, eggStack, eggsProgressBar])
-//        global.axis = .vertical
-//        global.alignment = .center
-//        global.distribution = .fillEqually
-//        global.spacing = 40
-//        global.translatesAutoresizingMaskIntoConstraints = false
-//        return global
-//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,9 +90,7 @@ class ViewController: UIViewController {
         view.addSubview(questionLabel)
         view.addSubview(eggStack)
         view.addSubview(eggsProgressBar)
-        
-//        view.addSubview(globalStack)
-        
+                
         setConstraints()
         
     }
@@ -116,19 +103,13 @@ class ViewController: UIViewController {
             questionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             eggStack.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            eggStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            eggStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            eggStack.heightAnchor.constraint(equalToConstant: 150),
+            eggStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            eggStack.heightAnchor.constraint(equalToConstant: 140),
+            eggStack.widthAnchor.constraint(equalToConstant: 350),
             
             eggsProgressBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
             eggsProgressBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
             eggsProgressBar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
-            
-//            globalStack.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor),
-//            globalStack.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor),
-//            globalStack.leadingAnchor.constraint(equalTo: view.layoutMarginsGuide.leadingAnchor),
-//            globalStack.trailingAnchor.constraint(equalTo: view.layoutMarginsGuide.trailingAnchor),
-        
         
         ])
     }
